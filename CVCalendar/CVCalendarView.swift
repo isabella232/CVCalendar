@@ -287,10 +287,9 @@ extension CVCalendarView {
         contentController.presentPreviousView(nil)
     }
 
-    public func changeMode(_ mode: CalendarMode, completion: @escaping () -> () = {}) {
-        guard let selectedDate = coordinator.selectedDayView?.date.convertedDate() ,
-            calendarMode != mode else {
-                return
+    public func changeMode(_ mode: CalendarMode, animationDuration: TimeInterval = 0.5, completion: @escaping () -> () = {}) {
+        guard let selectedDate = coordinator.selectedDayView?.date.convertedDate(), calendarMode != mode else {
+            return
         }
 
         calendarMode = mode
@@ -298,12 +297,12 @@ extension CVCalendarView {
         let newController: ContentController
         switch mode {
         case .weekView:
-            contentController.updateHeight(dayViewSize!.height, animated: true)
+            contentController.updateHeight(dayViewSize!.height, animated: true, animationDuration: animationDuration / 2.0)
             newController = WeekContentViewController(calendarView: self, frame: bounds,
                                                       presentedDate: selectedDate)
         case .monthView:
             contentController.updateHeight(
-                contentController.presentedMonthView.potentialSize.height, animated: true)
+                contentController.presentedMonthView.potentialSize.height, animated: true, animationDuration: animationDuration / 2.0)
             newController = MonthContentViewController(calendarView: self, frame: bounds,
                                                        presentedDate: selectedDate)
         }
@@ -312,8 +311,8 @@ extension CVCalendarView {
         newController.scrollView.alpha = 0
         addSubview(newController.scrollView)
 
-        UIView.animate(withDuration: 0.5, delay: 0,
-                                   options: UIViewAnimationOptions(), animations: {
+        UIView.animate(withDuration: animationDuration, delay: 0,
+                                   options: UIViewAnimationOptions.curveEaseInOut, animations: {
             self.contentController.scrollView.alpha = 0
             newController.scrollView.alpha = 1
         }) { _ in
