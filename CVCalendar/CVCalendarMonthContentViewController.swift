@@ -413,13 +413,44 @@ extension CVCalendarMonthContentViewController {
         if currentPage != page {
             currentPage = page
         }
-
+        
         lastContentOffset = scrollView.contentOffset.x
     }
 
     public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if let presented = monthViews[presented] {
             prepareTopMarkersOnMonthView(presented, hidden: true)
+        }
+    }
+    
+    public func scrollViewWillEndDragging(scrollView: UIScrollView,
+                                            withVelocity velocity: CGPoint,
+                                                         targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let pageWidth = scrollView.frame.width
+        var newPage: Int = currentPage
+        
+        if velocity.x == 0 {
+            newPage = Int(floor((targetContentOffset.memory.x - pageWidth / 2) / pageWidth)) + 1
+        } else {
+            newPage = velocity.x > 0 ? currentPage + 1 : currentPage - 1
+            if newPage < 0 {
+                newPage = 0
+            }
+            
+            if CGFloat(newPage) > scrollView.contentSize.width / pageWidth {
+                newPage = Int(ceil(scrollView.contentSize.width / pageWidth)) - 1
+            }
+            
+            if newPage > 2 {
+                newPage = 2
+            }
+        }
+        
+        if let monthView = monthViews[self.identifierForIndex(newPage)], shouldScroll = self.calendarView.delegate?.shouldScrollToMonthView?(monthView) {
+            if !shouldScroll {
+                targetContentOffset.memory.x = scrollView.frame.width
+                currentPage = 1
+            }
         }
     }
 
