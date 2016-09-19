@@ -155,7 +155,6 @@ extension CVCalendarContentViewController {
     }
     
     public func identifierForIndex(index: Int) -> Identifier {
-        let identifier: Identifier
         switch index {
         case 0:
             return previous
