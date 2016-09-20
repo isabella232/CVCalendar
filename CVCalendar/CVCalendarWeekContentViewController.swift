@@ -498,9 +498,7 @@ extension CVCalendarWeekContentViewController {
         }
     }
     
-    public func scrollViewWillEndDragging(scrollView: UIScrollView,
-                                          withVelocity velocity: CGPoint,
-                                                       targetContentOffset: inout UnsafeMutablePointer<CGPoint>) {
+    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         let pageWidth = scrollView.frame.width
         var newPage: Int = currentPage
         
@@ -521,7 +519,7 @@ extension CVCalendarWeekContentViewController {
             }
         }
         
-        if let weekView = weekViews[self.identifierForIndex(index: newPage)], let shouldScroll = self.calendarView.delegate?.shouldScrollToWeekView?(weekView: weekView) {
+        if let weekView = weekViews[self.identifierForIndex(index: newPage)], let shouldScroll = self.calendarView.delegate?.shouldScroll?(toWeekView: weekView) {
             if !shouldScroll {
                 targetContentOffset.pointee.x = scrollView.frame.width
                 currentPage = 1

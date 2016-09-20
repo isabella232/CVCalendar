@@ -25,8 +25,8 @@ public protocol CVCalendarViewDelegate {
     @objc optional func shouldShowWeekdaysOut() -> Bool
     @objc optional func shouldSelectDayView(_ dayView: DayView) -> Bool
     
-    @objc optional func shouldScrollToMonthView(monthView: MonthView) -> Bool
-    @objc optional func shouldScrollToWeekView(weekView: WeekView) -> Bool
+    @objc optional func shouldScroll(toMonthView monthView: MonthView) -> Bool
+    @objc optional func shouldScroll(toWeekView weekView: WeekView) -> Bool
     
     @objc optional func didSelectDayView(_ dayView: DayView, animationDidFinish: Bool)
     @objc optional func presentedDateUpdated(_ date: CVDate)
